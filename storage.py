@@ -29,7 +29,7 @@ class Store:
             if os.path.isfile(filepath):
                 is_exist = True
                 fp = open(filepath, "r")
-                self.record_d[table_name] = json.load(fp.read())
+                self.record_d[table_name] = json.load(fp)
                 fp.close()
             self.global_record[table_name] = Table(table_name, filepath, is_exist)
         return self.global_record[table_name]
@@ -56,9 +56,9 @@ class Store:
 
     def get(self, table: Table, key: str):
         if not table.is_exist:
-            raise RuntimeError("Table not exist.")
+            raise KeyError("Table not exist.")
         if not self.is_live:
-            data = json.loads(open(table.filename).read())
+            data = json.load(open(table.filename))
             return data[key]
         else:
             return self.record_d[table.name][key]
